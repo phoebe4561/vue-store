@@ -61,7 +61,7 @@ export default {
             const name = this.user.username.split('@')[0];
             // console.log(name);
             sessionStorage.setItem('userId', name);
-            this.$router.push('/home');
+            this.$router.push('/admin');
           } else {
             this.user.password = '';
             this.loadingState = '';

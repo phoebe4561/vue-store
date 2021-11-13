@@ -5,6 +5,7 @@ import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import App from './App.vue';
 import router from './router';
+import httpMsgState from './assets/js/alertMsgState';
 
 // sweetalert
 const options = {
@@ -22,4 +23,6 @@ const app = createApp(App);
 app.use(VueAxios, axios);
 app.use(VueSweetalert2, options);
 app.use(router);
+
+app.config.globalProperties.$httpMsgState = httpMsgState;
 app.mount('#app');
