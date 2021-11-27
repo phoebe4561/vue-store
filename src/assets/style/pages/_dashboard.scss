@@ -1,0 +1,234 @@
+.sidebar {
+  transition: 0.4s;
+  .sidebarList {
+    .link.active {
+      opacity: 1;
+      color: white;
+      background-color: darken($primary, 20%);
+    }
+    .link:hover {
+      background-color: darken($primary, 20%);
+    }
+  }
+}
+.title {
+  &::after {
+    display: block;
+    content: '';
+    background-color: #fff;
+    width: 1.5em;
+    height: 2px;
+    margin: 1rem auto;
+  }
+}
+.dashboard-bg {
+  max-width: 750px;
+  width: 70%;
+  right: 0;
+  bottom: 0;
+}
+
+@include media-breakpoint-down(md) {
+  .sidebar,
+  .sidebar.close-sidebar {
+    position: fixed !important;
+    top: 67px;
+    width: 100%;
+    z-index: 1000;
+    span {
+      display: inline-block;
+    }
+  }
+  .close-sidebar {
+    transform: translateX(-100%);
+  }
+  .dashboard-bg {
+    width: 100%;
+    margin: auto;
+  }
+}
+@include media-breakpoint-down(lg) {
+  .modal-dialog {
+    width: 100vw;
+    max-width: none;
+    height: 100vh;
+    margin: 0;
+    border-radius: 0;
+  }
+}
+.hamburger-wrapper {
+  .hamburger {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    width: 20px;
+    height: 2px;
+    border-radius: 2px;
+    background-color: black;
+    transition: 0.2s;
+    &::before,
+    &::after {
+      position: absolute;
+      content: '';
+      width: 20px;
+      height: 2px;
+      left: 0;
+      border-radius: 2px;
+      background-color: black;
+      transition: 0.4s;
+    }
+    &::before {
+      top: -8px;
+    }
+    &::after {
+      bottom: -8px;
+    }
+    &.active {
+      background-color: transparent;
+      &::before {
+        top: 0;
+        transform: rotate(45deg);
+      }
+      &::after {
+        bottom: 0;
+        transform: rotate(-45deg);
+      }
+    }
+  }
+}
+
+.arrowIcon {
+  transform: rotateZ(0deg);
+  transition-duration: 0.3s;
+  transition-timing-function: cubic-bezier(0.59, 1.39, 0.37, 1.01);
+}
+.rotated {
+  transform: rotateZ(180deg);
+}
+
+.menu-dropdown {
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 0.25rem;
+  cursor: pointer;
+  margin: 2.5rem 0 0;
+  position: absolute;
+  li {
+    &:hover {
+      background: $light;
+    }
+  }
+}
+
+.addItem-fixed {
+  width: 48px;
+  height: 48px;
+  right: 24px;
+  bottom: 24px;
+  background: darken($primary, 30%);
+  color: #eee;
+  position: fixed;
+  z-index: 100;
+  transition: 0.5s;
+}
+
+//後臺表單RWD
+@include media-breakpoint-down(md) {
+  .table-responsive,
+  table,
+  thead,
+  tbody,
+  th,
+  td,
+  tr {
+    display: block;
+  }
+
+  .table > :not(:first-child) {
+    border-top: none;
+  }
+
+  .table {
+    margin-bottom: 0;
+  }
+
+  thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  tr:nth-child(even) {
+    border: 2px solid lighten($primary, 30%);
+  }
+
+  tr:nth-child(odd) {
+    background: lighten($primary, 30%);
+  }
+
+  td {
+    border: none;
+    border-bottom: 2px solid #eee;
+    position: relative;
+    padding-left: 30% !important;
+    text-align: left !important;
+  }
+
+  td:before {
+    position: absolute;
+    left: 1rem;
+    font-weight: bold;
+  }
+  td:nth-of-type(1):before {
+    content: '編號';
+    color: $primary;
+  }
+  td:nth-of-type(2):before {
+    content: '類別';
+    color: $primary;
+  }
+  td:nth-of-type(3):before {
+    content: '名稱';
+    color: $primary;
+  }
+  td:nth-of-type(4):before {
+    content: '售價';
+    color: $primary;
+  }
+  td:nth-of-type(5):before {
+    content: '原價';
+    color: $primary;
+  }
+  td:nth-of-type(6):before {
+    content: '是否啟用';
+    color: $primary;
+  }
+}
+
+.scroll-inner {
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar:horizontal {
+    height: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: transparentize(#ccc, 0.7);
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: $primary;
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+  }
+}
+
+.backendForm {
+  background-color: rgba(0, 0, 0, 0.8);
+  border: 1px solid $primary;
+}
+
+textarea {
+  height: 180px;
+}

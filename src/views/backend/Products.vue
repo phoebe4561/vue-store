@@ -1,11 +1,11 @@
 <template>
-  <button type="button" class="addItem-fixed rounded-circle shadow d-md-none">
+  <button type="button" @click="openModal" class="addItem-fixed rounded-circle shadow d-md-none">
     <i class="fas fa-plus"></i>
   </button>
   <div class="p-1">
     <div class="d-flex justify-content-md-between align-items-center mb-4 justify-content-center">
       <h2>商品管理列表</h2>
-      <button type="button" class="btn btn-primary text-white d-none d-md-block">新增商品</button>
+      <button @click="openModal" type="button" class="btn btn-primary text-white d-none d-md-block">新增商品</button>
     </div>
     <div class="p-2 shadow rounded-4">
       <div class="table-responsive text-nowrap scroll-inner">
@@ -51,15 +51,22 @@
       </div>
     </div>
   </div>
+  <ProductModal :product="tempProduct" @update-products="updateProducts" ref="productModal"></ProductModal>
 </template>
 
 <script>
+import ProductModal from '@/components/backend/ProductModal.vue';
+
 export default {
   data() {
     return {
       products: [],
       pagination: {},
+      tempProduct: {},
     };
+  },
+  components: {
+    ProductModal,
   },
   methods: {
     getProducts() {
@@ -77,114 +84,25 @@ export default {
           this.$swal.fire({ icon: 'error', title: err.message });
         });
     },
+    openModal() {
+      this.tempProduct = {};
+      const productComponent = this.$refs.productModal;
+      productComponent.showModal();
+    },
+    updateProducts(item) {
+      // console.log(item);
+      this.tempProduct = item;
+      const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/product`;
+      const productComponent = this.$refs.productModal;
+      this.$http.post(api, { data: this.tempProduct }).then((res) => {
+        console.log(res);
+        productComponent.hideModal();
+        this.getProducts();
+      });
+    },
   },
   created() {
     this.getProducts();
   },
 };
 </script>
-
-<style lang="scss">
-@import '@/assets/style/all';
-
-.addItem-fixed {
-  width: 48px;
-  height: 48px;
-  right: 24px;
-  bottom: 24px;
-  background: darken($primary, 30%);
-  color: #eee;
-  position: fixed;
-  z-index: 100;
-  transition: 0.5s;
-}
-
-@include media-breakpoint-down(md) {
-  .table-responsive,
-  table,
-  thead,
-  tbody,
-  th,
-  td,
-  tr {
-    display: block;
-  }
-
-  .table > :not(:first-child) {
-    border-top: none;
-  }
-
-  .table {
-    margin-bottom: 0;
-  }
-
-  thead tr {
-    position: absolute;
-    top: -9999px;
-    left: -9999px;
-  }
-
-  tr:nth-child(even) {
-    border: 2px solid lighten($primary, 30%);
-  }
-
-  tr:nth-child(odd) {
-    background: lighten($primary, 30%);
-  }
-
-  td {
-    border: none;
-    border-bottom: 2px solid #eee;
-    position: relative;
-    padding-left: 30% !important;
-    text-align: left !important;
-  }
-
-  td:before {
-    position: absolute;
-    left: 1rem;
-    font-weight: bold;
-  }
-  td:nth-of-type(1):before {
-    content: '編號';
-    color: $primary;
-  }
-  td:nth-of-type(2):before {
-    content: '類別';
-    color: $primary;
-  }
-  td:nth-of-type(3):before {
-    content: '名稱';
-    color: $primary;
-  }
-  td:nth-of-type(4):before {
-    content: '售價';
-    color: $primary;
-  }
-  td:nth-of-type(5):before {
-    content: '原價';
-    color: $primary;
-  }
-  td:nth-of-type(6):before {
-    content: '是否啟用';
-    color: $primary;
-  }
-}
-
-.scroll-inner {
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
-  &::-webkit-scrollbar:horizontal {
-    height: 8px;
-  }
-  &::-webkit-scrollbar-track {
-    background-color: transparentize(#ccc, 0.7);
-  }
-  &::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    background-color: $primary;
-    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
-  }
-}
-</style>
