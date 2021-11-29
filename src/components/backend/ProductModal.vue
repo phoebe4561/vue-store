@@ -17,15 +17,24 @@
               <div class="row mb-3">
                 <div class="col-md-6 mb-3 mb-md-0">
                   <label for="category" class="form-label text-white">*分類:</label>
-                  <select v-model="tempProduct.category" type="text" class="backendForm form-select text-secondary" id="category" name="category">
-                    <option value="" disabled>請選擇分類</option>
-                    <!--why 無法帶出預設值 -->
-                    <option v-for="item in categories" :key="item" :value="item">{{ item }}</option>
+
+                  <!-- tempProduct.category 沒有值的狀態 -->
+                  <select v-if="!tempProduct.category" class="backendForm form-select text-secondary" id="category" @input="categorySelect($event.target.value)">
+                    <option value="" disabled selected>請選擇種類</option>
+                    <option :value="item" v-for="item in categories" :key="item">
+                      {{ item }}
+                    </option>
+                  </select>
+                  <!-- tempProduct.category 有值的狀態 -->
+                  <select v-else v-model="tempProduct.category" class="backendForm form-select text-secondary" id="category">
+                    <option :value="item" v-for="item in categories" :key="item">
+                      {{ item }}
+                    </option>
                   </select>
                 </div>
                 <div class="col-md-6">
                   <label for="unit" class="form-label text-white">*單位:</label>
-                  <input type="number" v-model="tempProduct.unit" class="backendForm form-control text-secondary" id="unit" name="unit" placeholder="請輸入單位" />
+                  <input type="text" v-model="tempProduct.unit" class="backendForm form-control text-secondary" id="unit" name="unit" placeholder="請輸入單位" />
                 </div>
               </div>
               <div class="row mb-3">
@@ -35,7 +44,7 @@
                 </div>
                 <div class="col-md-6">
                   <label for="price" class="form-label text-white">*售價:</label>
-                  <input type="text" v-model="tempProduct.origin" class="backendForm form-control text-secondary" id="price" name="price" placeholder="請輸入商品售價" />
+                  <input type="number" v-model="tempProduct.price" class="backendForm form-control text-secondary" id="price" name="price" placeholder="請輸入商品售價" />
                 </div>
               </div>
               <div class="mb-3">
@@ -48,8 +57,8 @@
               </div>
               <div class="mb-3">
                 <div class="col-md-6">
-                  <label for="num" class="form-label text-white">*庫存數量:</label>
-                  <input type="number" v-model="tempProduct.num" class="backendForm form-control text-secondary" id="num" name="num" placeholder="請輸入商品庫存數量" />
+                  <label for="inStock" class="form-label text-white">*庫存數量:</label>
+                  <input type="number" v-model="tempProduct.inStock" class="backendForm form-control text-secondary" id="inStock" name="inStock" placeholder="請輸入商品庫存數量" />
                 </div>
               </div>
               <div class="mb-3">
@@ -91,7 +100,7 @@ export default {
     return {
       modal: {},
       tempProduct: {}, // 單向數據流 不可直接更動外層data
-      categories: ['室內植栽', '栽培介質', '組合盆栽'],
+      categories: ['室內植物', '栽培介質', '組合盆栽'],
     };
   },
   methods: {
@@ -100,6 +109,10 @@ export default {
     },
     showModal() {
       this.modal.show();
+    },
+    categorySelect(value) {
+      console.log(value);
+      // this.tempProduct.category = value;
     },
   },
   mounted() {
