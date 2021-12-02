@@ -67,6 +67,74 @@
                   <input type="checkbox" :true-value="1" :false-value="0" v-model="tempProduct.is_enabled" class="backendForm form-check-input" id="is_onSale" name="is_onSale" />
                 </div>
               </div>
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="text-white">*照片上傳:</div>
+                <div class="d-flex justify-content-center align-items-center text-white">
+                  <div>上傳方法</div>
+                  <div>
+                    <a @click.prevent="uploadMethod('cloud')" href="#" class="icon-link mx-2"><i class="fas fa-cloud-upload-alt"></i></a>
+                    <a @click.prevent="uploadMethod('link')" href="#" class="icon-link"><i class="fas fa-link"></i></a>
+                  </div>
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <!-- main image -->
+                <div class="productModal col-md-3 col-sm-6 mb-3">
+                  <label for="mainImg" class="form-label position-relative w-100 mb-0">
+                    <div class="mask-fill cursor-pointer border border-1 border-primary">
+                      <div class="position-absolute badge bg-secondary">MAIN</div>
+                      <img :src="tempProduct.imageUrl" onerror="(this.src = 'https://i.imgur.com/xmiTQFW.png')" class="productModal__img d-inline-block" />
+                    </div>
+                  </label>
+
+                  <div class="input-group">
+                    <!-- 本地上傳 -->
+                    <div class="flex-grow-1" v-if="uploadState.cloud">
+                      <label for="mainImg" class="text-secondary form-label btn btn-outline-primary w-100 mb-0">上傳圖片</label>
+                      <input ref="fileInput" @change="uploadFile($event.target)" type="file" class="form-control d-none" id="mainImg" name="file-to-upload" />
+                    </div>
+                    <!-- 輸入網址 -->
+                    <input v-if="uploadState.link" type="text" id="mainImg" class="form-control backendForm" placeholder="請輸入圖片url" v-model.trim="tempProduct.imageUrl" />
+                    <a
+                      href="#"
+                      @click.prevent="delImage()"
+                      :class="{
+                        disabled: tempProduct.imageUrl === '',
+                      }"
+                      class="btn btn-outline-primary"
+                      ><i class="fas fa-trash"></i
+                    ></a>
+                  </div>
+                </div>
+
+                <!-- other images -->
+                <div class="productModal col-md-3 col-sm-6 mb-3" v-for="(item, index) in tempProduct.imagesUrl" :key="item.id">
+                  <label :for="`otherImg${index}`" class="form-label w-100 mb-0">
+                    <div class="mask-fill cursor-pointer border border-1 border-primary">
+                      <img :src="item" onerror="(this.src = 'https://i.imgur.com/xmiTQFW.png')" class="productModal__img d-inline-block" />
+                    </div>
+                  </label>
+
+                  <div class="input-group">
+                    <!-- 本地上傳 -->
+                    <div class="flex-grow-1" v-if="uploadState.cloud">
+                      <label :for="`otherImg${index}`" class="text-secondary form-label btn btn-outline-primary w-100 mb-0">上傳圖片</label>
+                      <input ref="fileInput" @change="uploadFile($event.target, index)" type="file" class="form-control d-none" :id="`otherImg${index}`" name="file-to-upload" />
+                    </div>
+                    <!-- 輸入網址 -->
+                    <input v-if="uploadState.link" type="text" :id="`otherImg${index}`" class="form-control backendForm" placeholder="請輸入圖片url" v-model.trim="tempProduct.imagesUrl[index]" />
+                    <a
+                      href="#"
+                      @click.prevent="delImage(index)"
+                      :class="{
+                        disabled: tempProduct.imagesUrl[index] === '',
+                      }"
+                      class="btn btn-outline-primary"
+                      ><i class="fas fa-trash"></i
+                    ></a>
+                  </div>
+                </div>
+              </div>
             </div>
           </form>
         </div>
@@ -101,9 +169,46 @@ export default {
       modal: {},
       tempProduct: {}, // 單向數據流 不可直接更動外層data
       categories: ['室內植物', '栽培介質', '組合盆栽'],
+      uploadState: {
+        cloud: true,
+        link: false,
+      },
     };
   },
   methods: {
+    uploadFile(target, index) {
+      const file = target.files[0];
+      // const file = this.$refs.fileInput.files[0];
+      const formData = new FormData();
+      formData.append('file-to-upload', file);
+      const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/upload`;
+      this.$http.post(api, formData).then((res) => {
+        if (res.data.success) {
+          if (index === undefined) {
+            this.tempProduct.imageUrl = res.data.imageUrl;
+          } else {
+            this.tempProduct.imagesUrl[index] = res.data.imageUrl;
+          }
+        }
+      });
+    },
+    uploadMethod(state) {
+      // 切換上傳方式
+      if (state === 'cloud') {
+        this.uploadState.cloud = true;
+        this.uploadState.link = false;
+      } else {
+        this.uploadState.cloud = false;
+        this.uploadState.link = true;
+      }
+    },
+    delImage(index) {
+      // 刪除 imagesUrl 陣列最後一筆資料
+      this.tempProduct.imagesUrl[index] = '';
+      if (index === undefined) {
+        this.tempProduct.imageUrl = '';
+      }
+    },
     hideModal() {
       this.modal.hide();
     },
@@ -111,8 +216,7 @@ export default {
       this.modal.show();
     },
     categorySelect(value) {
-      console.log(value);
-      // this.tempProduct.category = value;
+      this.tempProduct.category = value;
     },
   },
   mounted() {
@@ -120,3 +224,34 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+.icon-link {
+  padding: 0.4rem;
+  background: rgba(70, 70, 70, 0.6);
+  width: 2rem;
+  height: 2rem;
+  line-height: 2rem;
+  font-size: 1.5rem;
+  border-radius: 50%;
+  text-align: center;
+  transition: 0.3s all ease;
+  &:hover {
+    color: white;
+  }
+  i {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+.mask-fill {
+  background: rgba(70, 70, 70, 0.6);
+  width: 100%;
+  height: 100%;
+}
+.productModal__img {
+  width: 100%;
+  height: 180px;
+}
+</style>
