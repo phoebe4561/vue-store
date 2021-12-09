@@ -81,7 +81,7 @@ export default {
           if (success) {
             this.products = products;
             this.pagination = pagination;
-            console.log(products);
+            // console.log(products);
           }
         })
         .catch((err) => {

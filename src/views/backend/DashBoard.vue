@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid gx-0">
     <div class="row gx-0">
-      <div :class="{ 'close-sidebar': isCollapse }" class="col-md-3 col-lg-2 sidebar text-center bg-primary text-white d-flex flex-column vh-100 position-sticky">
+      <div :class="{ 'close-sidebar': isCollapse }" class="col-md-3 col-lg-2 sidebar text-center bg-primary text-white d-flex flex-column">
         <div class="sidebarList">
           <h1 class="title my-4 d-none d-md-block fs-28">DashBoard</h1>
           <ul class="list-unstyled">

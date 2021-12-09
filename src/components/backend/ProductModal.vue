@@ -91,7 +91,7 @@
                     <!-- 本地上傳 -->
                     <div class="flex-grow-1" v-if="uploadState.cloud">
                       <label for="mainImg" class="text-secondary form-label btn btn-outline-primary w-100 mb-0">上傳圖片</label>
-                      <input ref="fileInput" @change="uploadFile($event.target)" type="file" class="form-control d-none" id="mainImg" name="file-to-upload" />
+                      <input @change="uploadFile($event.target)" type="file" class="form-control d-none" id="mainImg" name="file-to-upload" />
                     </div>
                     <!-- 輸入網址 -->
                     <input v-if="uploadState.link" type="text" id="mainImg" class="form-control backendForm" placeholder="請輸入圖片url" v-model.trim="tempProduct.imageUrl" />
@@ -119,7 +119,7 @@
                     <!-- 本地上傳 -->
                     <div class="flex-grow-1" v-if="uploadState.cloud">
                       <label :for="`otherImg${index}`" class="text-secondary form-label btn btn-outline-primary w-100 mb-0">上傳圖片</label>
-                      <input ref="fileInput" @change="uploadFile($event.target, index)" type="file" class="form-control d-none" :id="`otherImg${index}`" name="file-to-upload" />
+                      <input @change="uploadFile($event.target, index)" type="file" class="form-control d-none" :id="`otherImg${index}`" name="file-to-upload" />
                     </div>
                     <!-- 輸入網址 -->
                     <input v-if="uploadState.link" type="text" :id="`otherImg${index}`" class="form-control backendForm" placeholder="請輸入圖片url" v-model.trim="tempProduct.imagesUrl[index]" />
@@ -162,6 +162,12 @@ export default {
   watch: {
     product() {
       this.tempProduct = this.product;
+      if (!this.tempProduct.imagesUrl) {
+        this.tempProduct.imagesUrl = ['', '', '', '', ''];
+      }
+      if (!this.tempProduct.imageUrl) {
+        this.tempProduct.imageUrl = '';
+      }
     },
   },
   data() {
@@ -178,7 +184,6 @@ export default {
   methods: {
     uploadFile(target, index) {
       const file = target.files[0];
-      // const file = this.$refs.fileInput.files[0];
       const formData = new FormData();
       formData.append('file-to-upload', file);
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/upload`;
@@ -224,34 +229,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-.icon-link {
-  padding: 0.4rem;
-  background: rgba(70, 70, 70, 0.6);
-  width: 2rem;
-  height: 2rem;
-  line-height: 2rem;
-  font-size: 1.5rem;
-  border-radius: 50%;
-  text-align: center;
-  transition: 0.3s all ease;
-  &:hover {
-    color: white;
-  }
-  i {
-    width: 30px;
-    height: 30px;
-  }
-}
-
-.mask-fill {
-  background: rgba(70, 70, 70, 0.6);
-  width: 100%;
-  height: 100%;
-}
-.productModal__img {
-  width: 100%;
-  height: 180px;
-}
-</style>

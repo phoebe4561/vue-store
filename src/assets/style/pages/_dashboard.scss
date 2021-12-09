@@ -1,5 +1,6 @@
 .sidebar {
   transition: 0.4s;
+  min-height: 100vh;
   .sidebarList {
     .link.active {
       opacity: 1;
@@ -32,12 +33,9 @@
   .sidebar,
   .sidebar.close-sidebar {
     position: fixed !important;
-    top: 67px;
-    width: 100%;
+    top: 70px;
+    // width: 100%;
     z-index: 1000;
-    span {
-      display: inline-block;
-    }
   }
   .close-sidebar {
     transform: translateX(-100%);
@@ -56,45 +54,44 @@
     border-radius: 0;
   }
 }
-.hamburger-wrapper {
-  .hamburger {
+
+.hamburger {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  width: 20px;
+  height: 2px;
+  border-radius: 2px;
+  background-color: black;
+  transition: 0.2s;
+  &::before,
+  &::after {
     position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    margin: auto;
+    content: '';
     width: 20px;
     height: 2px;
+    left: 0;
     border-radius: 2px;
     background-color: black;
-    transition: 0.2s;
-    &::before,
-    &::after {
-      position: absolute;
-      content: '';
-      width: 20px;
-      height: 2px;
-      left: 0;
-      border-radius: 2px;
-      background-color: black;
-      transition: 0.4s;
-    }
+    transition: 0.4s;
+  }
+  &::before {
+    top: -8px;
+  }
+  &::after {
+    bottom: -8px;
+  }
+  &.active {
+    background-color: transparent;
     &::before {
-      top: -8px;
+      top: 0;
+      transform: rotate(45deg);
     }
     &::after {
-      bottom: -8px;
-    }
-    &.active {
-      background-color: transparent;
-      &::before {
-        top: 0;
-        transform: rotate(45deg);
-      }
-      &::after {
-        bottom: 0;
-        transform: rotate(-45deg);
-      }
+      bottom: 0;
+      transform: rotate(-45deg);
     }
   }
 }
@@ -234,5 +231,35 @@
 }
 
 textarea {
+  height: 180px;
+}
+
+//productModal.vue
+.icon-link {
+  padding: 0.4rem;
+  background: rgba(70, 70, 70, 0.6);
+  width: 2rem;
+  height: 2rem;
+  line-height: 2rem;
+  font-size: 1.5rem;
+  border-radius: 50%;
+  text-align: center;
+  transition: 0.3s all ease;
+  &:hover {
+    color: white;
+  }
+  i {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+.mask-fill {
+  background: rgba(70, 70, 70, 0.6);
+  width: 100%;
+  height: 100%;
+}
+.productModal__img {
+  width: 100%;
   height: 180px;
 }
