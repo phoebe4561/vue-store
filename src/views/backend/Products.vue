@@ -91,6 +91,7 @@ export default {
     openModal(status, item) {
       if (status === 'CREATE') {
         this.tempProduct = {};
+        this.$refs.productModal.resetForm();
       } else if (status === 'EDIT') {
         this.tempProduct = { ...item };
         // console.log(this.tempProduct);
